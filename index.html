@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>EMAIL RENATAO</title>
+</head>
+<body>
+
+    <button id="btnEmail">Exibir E-mail do Renato</button>
+
+    <script>
+    const botao = document.getElementById('btnEmail');
+
+    botao.addEventListener('click', () => {
+        fetch('https://granderenatao.vercel.app/api/renato')
+            .then(res => res.json())
+            .then(dados => {
+                alert("O e-mail é: " + dados.message);
+            })
+            .catch(err => {
+                console.error("Erro ao chamar API:", err);
+                alert("Erro ao conectar com a API do Renato.");
+            });
+        });
+    </script>
+    
+</body>
+</html>
