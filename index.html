@@ -2,27 +2,90 @@
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>EMAIL RENATAO</title>
+    <title>Email do Renatão</title>
+
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            text-align: center;
+            width: 300px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+        }
+
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .erro {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 
-    <button id="btnEmail">Exibir E-mail do Renato</button>
+    <div class="card">
+        <h2>Email do Renatão</h2>
+
+        <button id="btnEmail">Mostrar e-mail</button>
+
+        <div id="resultado"></div>
+    </div>
 
     <script>
-    const botao = document.getElementById('btnEmail');
+        const botao = document.getElementById('btnEmail');
+        const resultado = document.getElementById('resultado');
 
-    botao.addEventListener('click', () => {
-        fetch('https://granderenatao.vercel.app/api/renato')
-            .then(res => res.json())
-            .then(dados => {
-                alert("O e-mail é: " + dados.message);
-            })
-            .catch(err => {
-                console.error("Erro ao chamar API:", err);
-                alert("Erro ao conectar com a API do Renato.");
-            });
+        botao.addEventListener('click', async () => {
+            botao.disabled = true;
+            resultado.textContent = "Carregando...";
+
+            try {
+                const resposta = await fetch('https://granderenatao.vercel.app/api/renato');
+
+                if (!resposta.ok) {
+                    throw new Error("Erro na resposta da API");
+                }
+
+                const dados = await resposta.json();
+                resultado.textContent = `O e-mail é: ${dados.message}`;
+
+            } catch (erro) {
+                console.error(erro);
+                resultado.textContent = "Erro ao conectar com a API.";
+                resultado.classList.add("erro");
+            } finally {
+                botao.disabled = false;
+            }
         });
     </script>
-    
+
 </body>
 </html>
